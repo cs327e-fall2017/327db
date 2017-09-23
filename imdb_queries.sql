@@ -20,3 +20,14 @@ from title_basics tb join directors d on (tb.title_id = d.title_id) join person_
 where tb.original_title <> tb.primary_title
 and tb.title_type = 'movie'
 order by tb.start_year asc;
+
+/*QUERY #3 (CPY86)
+This query searches for people and the title they're most famous for, 
+where the person has already deceased. It makes sure to pass living
+people by checking if death year is null or not, and is ordered by the
+title's starting year*/
+
+select pb.primary_name, pb.death_year, tb.primary_title
+from title_basics tb join stars s on (tb.title_id = s.title_id) join person_basics pb on (s.person_id = pb.person_id)
+where pb.death_year is NOT NULL
+order by tb.start_year asc;
