@@ -168,3 +168,16 @@ from title_ratings tr join stars s on (tr.title_id = s.title_id)
 join person_basics pb on (s.person_id = pb.person_id)
 where pb.death_year is not null
 order by tr.num_votes desc
+
+
+/* QUERY #16 (DJS3745)
+Show me old family movies so that I can
+educate my cousins on what Disney used to be
+back in the day. Though I don't think they'll have
+the patience for silent films.*/
+
+SELECT tb.primary_title, tb.start_year
+FROM title_genres tg JOIN title_basics tb ON tb.title_id = tg.title_id
+WHERE tg.genre = 'Family' and tb.title_type = 'movie'
+AND tb.start_year <= 1970 and tb.start_year >= 1950
+ORDER BY tb.start_year asc
