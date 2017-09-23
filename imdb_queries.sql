@@ -101,3 +101,13 @@ FROM title_basics tb JOIN title_genres tg ON tb.title_id = tg.title_id
 JOIN title_ratings tr ON tr.title_id = tb.title_id
 WHERE tg.genre = 'Documentary' and tb.runtime_minutes >= 20
 ORDER BY tb.runtime_minutes, tb.start_year desc, tr.average_rating desc
+
+
+/*QUERY # 10
+This query searches for the actor, title, and runtime minutes, where the 
+title is adult themed and is ordered from longest runtime to least*/
+
+select distinct tb.primary_title, pb.primary_name, tb.runtime_minutes
+from title_basics tb join principals p on (tb.title_id = p.title_id) join person_basics pb on (p.person_id = pb.person_id)
+where tb.is_adult = TRUE
+order by tb.runtime_minutes desc;
