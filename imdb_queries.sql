@@ -75,3 +75,13 @@ JOIN title_ratings tr ON tr.title_id = w.title_id
 JOIN title_basics tb ON tb.title_id = w.title_id
 WHERE pb.death_year <= 2017 and pb.death_year >= 2016 and tb.title_type = 'tvSeries'
 ORDER BY tr.average_rating desc
+
+/*QUERY #8 (CPY86)
+This query searches for actors that were born after 2000 and prints 
+their birth year, and orders it by actor's name*/
+
+select pb.primary_name, pb.birth_year
+from person_basics pb join person_professions pp on (pb.person_id = pp.person_id)
+where pb.birth_year > 2000
+and pp.profession = 'actor'
+order by pb.primary_name asc;
