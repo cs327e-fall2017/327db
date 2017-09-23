@@ -150,10 +150,21 @@ ORDER BY tr.average_rating desc
 
 
 /* QUERY #14 (CPY86)
-This query serches for the comedy title, and its average rating. It will
+This query searches for the comedy title, and its average rating. It will
 be ordered by highest rating to low*/
 
 select tb.primary_title, tr.average_rating
 from title_genres tg join title_basics tb on (tg.title_id = tb.title_id) join title_ratings tr on (tb.title_id = tr.title_id)
 where tg.genre = 'Comedy'
 order by tr.average_rating desc
+
+
+/* Query #15 (CPY86)
+This query searches for actor name and number of votes, where the actor
+is still alive, and is ordered by the number of votes */
+
+select pb.primary_name, tr.num_votes
+from title_ratings tr join stars s on (tr.title_id = s.title_id)
+join person_basics pb on (s.person_id = pb.person_id)
+where pb.death_year is not null
+order by tr.num_votes desc
