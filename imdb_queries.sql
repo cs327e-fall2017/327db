@@ -42,3 +42,13 @@ FROM person_basics pb JOIN stars s ON s.person_id = pb.person_id
 JOIN title_basics tb ON tb.title_id = s.title_id
 WHERE tb.title_type = 'movie'and pb.primary_name = 'Tom Cruise'
 ORDER BY tb.start_year asc;
+
+/*Query #5 (CPY86)
+This query searches for people's name, the title they were starred
+in, and it's number of votes, by order of it's average rating from 
+10 to 0. */
+
+select pb.primary_name, tb.primary_title, tr.average_rating, tr.num_votes
+from person_basics pb join stars s on (pb.person_id = s.person_id) 
+join title_basics tb on (s.title_id = tb.title_id) join title_ratings tr on (tb.title_id = tr.title_id)
+order by tr.average_rating desc;
