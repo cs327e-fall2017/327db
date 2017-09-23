@@ -64,3 +64,14 @@ What movies do people hate so much they just NEED to rate it terribly?*/
 SELECT tr.num_votes, tr.average_rating, tb.primary_title
 FROM title_basics tb JOIN title_ratings tr ON tb.title_id = tr.title_id
 ORDER BY tr.average_rating asc, tr.num_votes desc
+
+
+/* Query #7 (DJS3745)
+Did the writers of any good TV Shows pass away in the last year or so? */
+
+SELECT pb.primary_name, pb.death_year, tb.primary_title, tr.average_rating
+FROM writers w JOIN person_basics pb ON w.person_id = pb.person_id
+JOIN title_ratings tr ON tr.title_id = w.title_id
+JOIN title_basics tb ON tb.title_id = w.title_id
+WHERE pb.death_year <= 2017 and pb.death_year >= 2016 and tb.title_type = 'tvSeries'
+ORDER BY tr.average_rating desc
