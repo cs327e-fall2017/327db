@@ -193,3 +193,15 @@ JOIN stars s ON s.title_id = tb.title_id
 JOIN person_basics pb ON pb.person_id = s.person_id
 WHERE pb.primary_name = 'James Franco'
 ORDER BY start_year asc
+
+
+/* QUERY #18 (CPY86)
+This query searches for the person's name if they wrote and/or directed. 
+It's checked if the person is alive and is ordered by name*/
+
+select pb.primary_name, pp.profession 
+from person_professions pp join person_basics pb on (pp.person_id = pb.person_id)
+where pp.profession = 'writer'
+or pp.profession = 'director'
+and death_year is not null
+order by pb.primary_name desc
