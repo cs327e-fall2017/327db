@@ -124,3 +124,13 @@ JOIN title_basics tb ON s.title_id = tb.title_id
 JOIN title_genres tg ON tg.title_id = tb.title_id
 WHERE tg.genre = 'Comedy' and pb.primary_name = 'George Clooney' and tb.start_year <= 2016
 ORDER BY tb.start_year desc
+
+
+/*QUERY # 12 (CPY86)
+This query searches for the title, adult status, and average rating, where
+the adult status is true, and is ordered by highest rating to low*/
+
+select tb.primary_title, tb.is_adult, tr.average_rating
+from title_basics tb join title_ratings tr on (tb.title_id = tr.title_id)
+where tb.is_adult = TRUE
+order by tr.average_rating desc;
