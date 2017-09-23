@@ -35,7 +35,7 @@ where pb.death_year is NOT NULL
 order by tb.start_year asc;
 
 
-/*Query #4 (DJS3745)
+/*QUERY #4 (DJS3745)
 What is the oldest movie in the database
 that Tom Cruise starred in? */
 
@@ -46,7 +46,7 @@ WHERE tb.title_type = 'movie'and pb.primary_name = 'Tom Cruise'
 ORDER BY tb.start_year asc;
 
 
-/*Query #5 (CPY86)
+/*QUERY #5 (CPY86)
 This query searches for people's name, the title they were starred
 in, and it's number of votes, by order of it's average rating from
 10 to 0. */
@@ -57,7 +57,7 @@ join title_basics tb on (s.title_id = tb.title_id) join title_ratings tr on (tb.
 order by tr.average_rating desc;
 
 
-/* Query #6 (DJS3745)
+/* QUERY #6 (DJS3745)
 What movies do people hate so much they just NEED to rate it terribly?*/
 
 SELECT tr.num_votes, tr.average_rating, tb.primary_title
@@ -65,7 +65,7 @@ FROM title_basics tb JOIN title_ratings tr ON tb.title_id = tr.title_id
 ORDER BY tr.average_rating asc, tr.num_votes desc
 
 
-/* Query #7 (DJS3745)
+/* QUERY #7 (DJS3745)
 Did the writers of any good TV Shows pass away in the last year or so? */
 
 SELECT pb.primary_name, pb.death_year, tb.primary_title, tr.average_rating
@@ -87,7 +87,7 @@ and pp.profession = 'actor'
 order by pb.primary_name asc;
 
 
-/* Query #9
+/* QUERY #9 9DJS3745
 I want to learn something but I don't
 have a lot of time. Show me the shortest
 good documentaries available, ideally made
@@ -103,11 +103,24 @@ WHERE tg.genre = 'Documentary' and tb.runtime_minutes >= 20
 ORDER BY tb.runtime_minutes, tb.start_year desc, tr.average_rating desc
 
 
-/*QUERY # 10
-This query searches for the actor, title, and runtime minutes, where the 
+/*QUERY # 10 (CPY86)
+This query searches for the actor, title, and runtime minutes, where the
 title is adult themed and is ordered from longest runtime to least*/
 
 select distinct tb.primary_title, pb.primary_name, tb.runtime_minutes
 from title_basics tb join principals p on (tb.title_id = p.title_id) join person_basics pb on (p.person_id = pb.person_id)
 where tb.is_adult = TRUE
-order by tb.runtime_minutes desc;
+order by tb.runtime_minutes desc;\
+
+
+/* QUERY #11 (DJS3745)
+Has George Clooney ever done a comedy movie?
+If so I'm quite curious, so curious in fact
+that I'd like to watch it tonight. */
+
+SELECT tb.primary_title, tb.start_year
+FROM stars s JOIN person_basics pb ON s.person_id = pb.person_id
+JOIN title_basics tb ON s.title_id = tb.title_id
+JOIN title_genres tg ON tg.title_id = tb.title_id
+WHERE tg.genre = 'Comedy' and pb.primary_name = 'George Clooney' and tb.start_year <= 2016
+ORDER BY tb.start_year desc
