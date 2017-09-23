@@ -147,3 +147,13 @@ JOIN title_genres tg ON tg.title_id = d.title_id
 JOIN title_basics tb on tb.title_id = d.title_id
 WHERE tg.genre = 'Documentary' and tr.num_votes >= 100
 ORDER BY tr.average_rating desc
+
+
+/* QUERY #14 (CPY86)
+This query serches for the comedy title, and its average rating. It will
+be ordered by highest rating to low*/
+
+select tb.primary_title, tr.average_rating
+from title_genres tg join title_basics tb on (tg.title_id = tb.title_id) join title_ratings tr on (tb.title_id = tr.title_id)
+where tg.genre = 'Comedy'
+order by tr.average_rating desc
