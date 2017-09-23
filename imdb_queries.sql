@@ -18,9 +18,9 @@ director's name. All of this will be ordered by the movie's starting year.*/
 
 SELECT tb.primary_title, pb.primary_name
 FROM title_basics tb JOIN directors d ON (tb.title_id = d.title_id) JOIN person_basics pb ON (d.person_id = pb.person_id)
-where tb.original_title <> tb.primary_title
-and tb.title_type = 'movie'
-order by tb.start_year asc;
+WHERE tb.original_title <> tb.primary_title
+AND tb.title_type = 'movie'
+ORDER BY tb.start_year asc;
 
 
 /*QUERY #3 (CPY86)
@@ -196,10 +196,10 @@ ORDER BY start_year asc
 
 
 /* QUERY #18 (CPY86)
-This query searches for the person's name if they wrote and/or directed. 
+This query searches for the person's name if they wrote and/or directed.
 It's checked if the person is alive and is ordered by name*/
 
-SELECT pb.primary_name, pp.profession 
+SELECT pb.primary_name, pp.profession
 FROM person_professions pp JOIN person_basics pb ON (pp.person_id = pb.person_id)
 WHERE pp.profession = 'writer'
 or pp.profession = 'director'
@@ -210,8 +210,20 @@ ORDER BY pb.primary_name desc
 /* QUERY #19 (CPY86)
 This query searches for Wes Anderson Movies by its rating*/
 
-SELECT pb.primary_name, tb.primary_title 
-FROM person_basics pb JOIN directors d ON (pb.person_id = d.person_id) 
+SELECT pb.primary_name, tb.primary_title
+FROM person_basics pb JOIN directors d ON (pb.person_id = d.person_id)
 JOIN title_basics tb ON (d.title_id = tb.title_id) JOIN title_ratings tr ON (tb.title_id = tr.title_id)
 where pb.primary_name = 'Wes Anderson'
 ORDER BY tr.average_rating desc;
+
+
+/* QUERY #20 (DJS3745)
+Generate a list of the oldest living
+actresses and actors */
+
+SELECT pb.primary_name, pb.birth_year
+FROM person_basics pb JOIN person_professions pp ON pb.person_id = pp.person_id
+WHERE (pp.profession = 'actor' or pp.profession = 'actress')
+AND pb.birth_year > 1900
+AND pb.death_year IS NULL
+ORDER BY pb.birth_year asc
