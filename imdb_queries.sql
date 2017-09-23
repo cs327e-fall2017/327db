@@ -181,3 +181,15 @@ FROM title_genres tg JOIN title_basics tb ON tb.title_id = tg.title_id
 WHERE tg.genre = 'Family' and tb.title_type = 'movie'
 AND tb.start_year <= 1970 and tb.start_year >= 1950
 ORDER BY tb.start_year asc
+
+
+/* QUERY #17 (DJS3745)
+How  has the ratings of movies that
+James Franco has been in changed over time? */
+
+SELECT tb.primary_title, tr.average_rating, tb.start_year
+FROM title_basics tb JOIN title_ratings tr ON tb.title_id = tr.title_id
+JOIN stars s ON s.title_id = tb.title_id
+JOIN person_basics pb ON pb.person_id = s.person_id
+WHERE pb.primary_name = 'James Franco'
+ORDER BY start_year asc
