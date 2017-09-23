@@ -134,3 +134,16 @@ select tb.primary_title, tb.is_adult, tr.average_rating
 from title_basics tb join title_ratings tr on (tb.title_id = tr.title_id)
 where tb.is_adult = TRUE
 order by tr.average_rating desc;
+
+
+/* QUERY #13 (DJS3745)
+Who directed the top-rated documentaries?
+Make sure ratings are validated by lots of people.*/
+
+SELECT DISTINCT pb.primary_name, tr.average_rating, tb.primary_title
+FROM directors d JOIN person_basics pb ON d.person_id = pb.person_id
+JOIN title_ratings tr ON d.title_id = tr.title_id
+JOIN title_genres tg ON tg.title_id = d.title_id
+JOIN title_basics tb on tb.title_id = d.title_id
+WHERE tg.genre = 'Documentary' and tr.num_votes >= 100
+ORDER BY tr.average_rating desc
