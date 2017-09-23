@@ -205,3 +205,13 @@ where pp.profession = 'writer'
 or pp.profession = 'director'
 and death_year is not null
 order by pb.primary_name desc
+
+
+/* QUERY #19 (CPY86)
+This query searches for Wes Anderson Movies by its rating*/
+
+select pb.primary_name, tb.primary_title 
+from person_basics pb join directors d on (pb.person_id = d.person_id) 
+join title_basics tb on (d.title_id = tb.title_id) join title_ratings tr on (tb.title_id = tr.title_id)
+where pb.primary_name = 'Wes Anderson'
+order by tr.average_rating desc;
