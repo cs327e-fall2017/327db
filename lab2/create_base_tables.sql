@@ -36,6 +36,34 @@ create table if not exists title_ratings (
   title_id char(9) primary key,
   average_rating numeric,
   num_votes int,
-)
+);
 
-create
+create table if not exists directors (
+  title_id char(9),
+  person_id char(9)
+);
+
+create table if not exists writers (
+  title_id char(9),
+  person_id char(9) 
+);
+
+create table if not exists principals (
+  title_id char(9),
+  person_id char(9)
+);
+
+create table if not exists stars (
+  person_id char(9),
+  title_id char(9)
+);
+
+create table if not exists person_professions (
+  person_id char(9),
+  professions varchar(25)
+);
+
+create table if not exists title_genres (
+  title_id char(9),
+  genre varchar(11)
+);
