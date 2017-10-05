@@ -41,7 +41,12 @@ create table if not exists title_ratings (
 create table if not exists directors (
   title_id char(9),
   person_id char(9)
-);
+  PRIMARY KEY (title_id, person_id),
+  FOREIGN KEY director2title_basics (title_id)
+  REFERENCES title_basics
+  FOREIGN KEY directors2person_basics (person_id)
+  REFERENCES person_basics
+  );
 
 create table if not exists writers (
   title_id char(9),
