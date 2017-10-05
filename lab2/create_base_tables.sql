@@ -21,7 +21,6 @@ CREATE TABLE if not exists title_basics (
 );
 
 DROP TABLE if exists person_basics;
-
 CREATE TABLE if not exists person_basics (
   person_id char(9) primary key,
   primary_name char(105) not null,
@@ -30,7 +29,6 @@ CREATE TABLE if not exists person_basics (
 );
 
 DROP TABLE if exists title_episodes;
-
 CREATE TABLE if not exists title_episodes (
   title_id char(9) primary key,
   parent_title char(9),
@@ -44,7 +42,6 @@ CREATE TABLE if not exists title_episodes (
 
 
 DROP TABLE if exists title_ratings;
-
 CREATE TABLE if not exists title_ratings (
   title_id char(9) primary key,
   average_rating numeric,
@@ -52,7 +49,6 @@ CREATE TABLE if not exists title_ratings (
 );
 
 DROP TABLE if exists directors;
-
 CREATE TABLE if not exists directors (
   title_id char(9),
   person_id char(9),
@@ -76,7 +72,6 @@ CREATE TABLE if not exists writers (
 );
 
 DROP TABLE if exists principals;
-
 CREATE TABLE if not exists principals (
   title_id char(9),
   person_id char(9),
@@ -88,7 +83,6 @@ CREATE TABLE if not exists principals (
 );
 
 DROP TABLE if exists stars;
-
 CREATE TABLE if not exists stars (
   person_id char(9),
   title_id char(9)
@@ -100,7 +94,6 @@ CREATE TABLE if not exists stars (
 );
 
 DROP TABLE if exists person_professions;
-
 CREATE TABLE if not exists person_professions (
   person_id char(9) primary key,
   professions varchar(25)
@@ -109,7 +102,6 @@ CREATE TABLE if not exists person_professions (
 );
 
 DROP TABLE if exists title_genres;
-
 CREATE TABLE if not exists title_genres (
   title_id char(9) primary key,
   genre varchar(11)
