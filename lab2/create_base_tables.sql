@@ -36,7 +36,12 @@ create table if not exists title_episodes (
   parent_title char(9),
   season_num int,
   episode_num int
+  FOREIGN KEY episodes2title_basics (title_id)
+  REFERENCES title_basics
+  FOREIGN KEY parent2title_basics (parent_title_id)
+  REFERENCES title_basics (title_id)
 );
+
 
 drop table if exists title_ratings;
 
