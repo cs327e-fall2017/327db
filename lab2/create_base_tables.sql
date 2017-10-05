@@ -67,14 +67,24 @@ drop table if exists writers;
 
 create table if not exists writers (
   title_id char(9),
-  person_id char(9)
+  person_id char(9),
+  PRIMARY KEY (title_id, person_id)
+  FOREIGN KEY writers2title_basics (title_id)
+  REFERENCES title_basics
+  FOREIGN KEY writers2person_basics (person_id)
+  REFERENCES person_basics
 );
 
 drop table if exists principals;
 
 create table if not exists principals (
   title_id char(9),
-  person_id char(9)
+  person_id char(9),
+  PRIMARY KEY (title_id, person_id)
+  FOREIGN KEY principals2title_basics (title_id)
+  REFERENCES title_basics
+  FOREIGN KEY principals2person_basics (person_id)
+  REFERENCES person_basics
 );
 
 drop table if exists stars;
@@ -82,18 +92,27 @@ drop table if exists stars;
 create table if not exists stars (
   person_id char(9),
   title_id char(9)
+  PRIMARY KEY (person_id, title_id)
+  FOREIGN KEY stars2person_basics (person_id)
+  REFERENCES person_basics
+  FOREIGN KEY stars2title_basics (title_id)
+  REFERENCES title_basics
 );
 
 drop table if exists person_professions;
 
 create table if not exists person_professions (
-  person_id char(9),
+  person_id char(9) primary key,
   professions varchar(25)
+  FOREIGN KEY person_professions2person_basics (person_id)
+  REFERENCES person_basics
 );
 
 drop table if exists title_genres;
 
 create table if not exists title_genres (
-  title_id char(9),
+  title_id char(9) primary key,
   genre varchar(11)
+  FOREIGN KEY title_genres2title_basics (title_id)
+  REFERENCES title_basics
 );
