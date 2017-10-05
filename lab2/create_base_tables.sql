@@ -7,9 +7,9 @@ create database imdb;
 \c imdb
 */
 
-drop table if exists title_basics;
+DROP TABLE if exists title_basics;
 
-create table if not exists title_basics (
+CREATE TABLE if not exists title_basics (
   title_id char(9) primary key,
   title_types varchar(12),
   primary_title varchar(292) not null,
@@ -20,18 +20,18 @@ create table if not exists title_basics (
   runtime_minutes int 
 );
 
-drop table if exists person_basics;
+DROP TABLE if exists person_basics;
 
-create table if not exists person_basics (
+CREATE TABLE if not exists person_basics (
   person_id char(9) primary key,
   primary_name char(105) not null,
   birth_year int,
   death_year int
 );
 
-drop table if exists title_episodes;
+DROP TABLE if exists title_episodes;
 
-create table if not exists title_episodes (
+CREATE TABLE if not exists title_episodes (
   title_id char(9) primary key,
   parent_title char(9),
   season_num int,
@@ -43,17 +43,17 @@ create table if not exists title_episodes (
 );
 
 
-drop table if exists title_ratings;
+DROP TABLE if exists title_ratings;
 
-create table if not exists title_ratings (
+CREATE TABLE if not exists title_ratings (
   title_id char(9) primary key,
   average_rating numeric,
   num_votes int
 );
 
-drop table if exists directors;
+DROP TABLE if exists directors;
 
-create table if not exists directors (
+CREATE TABLE if not exists directors (
   title_id char(9),
   person_id char(9),
   PRIMARY KEY (title_id, person_id)
@@ -63,9 +63,9 @@ create table if not exists directors (
   REFERENCES person_basics
 );
 
-drop table if exists writers;
+DROP TABLE if exists writers;
 
-create table if not exists writers (
+CREATE TABLE if not exists writers (
   title_id char(9),
   person_id char(9),
   PRIMARY KEY (title_id, person_id)
@@ -75,9 +75,9 @@ create table if not exists writers (
   REFERENCES person_basics
 );
 
-drop table if exists principals;
+DROP TABLE if exists principals;
 
-create table if not exists principals (
+CREATE TABLE if not exists principals (
   title_id char(9),
   person_id char(9),
   PRIMARY KEY (title_id, person_id)
@@ -87,9 +87,9 @@ create table if not exists principals (
   REFERENCES person_basics
 );
 
-drop table if exists stars;
+DROP TABLE if exists stars;
 
-create table if not exists stars (
+CREATE TABLE if not exists stars (
   person_id char(9),
   title_id char(9)
   PRIMARY KEY (person_id, title_id)
@@ -99,18 +99,18 @@ create table if not exists stars (
   REFERENCES title_basics
 );
 
-drop table if exists person_professions;
+DROP TABLE if exists person_professions;
 
-create table if not exists person_professions (
+CREATE TABLE if not exists person_professions (
   person_id char(9) primary key,
   professions varchar(25)
   FOREIGN KEY person_professions2person_basics (person_id)
   REFERENCES person_basics
 );
 
-drop table if exists title_genres;
+DROP TABLE if exists title_genres;
 
-create table if not exists title_genres (
+CREATE TABLE if not exists title_genres (
   title_id char(9) primary key,
   genre varchar(11)
   FOREIGN KEY title_genres2title_basics (title_id)
