@@ -29,5 +29,13 @@ create table if not exists title_episodes (
   title_id char(9) primary key,
   parent_title char(9),
   season_num int,
-  episode_num int,
+  episode_num int
+);
+
+create table if not exists title_ratings (
+  title_id char(9) primary key,
+  average_rating numeric,
+  num_votes int,
 )
+
+create
