@@ -12,8 +12,8 @@ DROP TABLE if exists title_basics;
 CREATE TABLE if not exists title_basics (
   title_id varchar(10) primary key,
   title_types varchar(12),
-  primary_title varchar(292),
-  original_title varchar(292),
+  primary_title varchar(400),
+  original_title varchar(400),
   is_adult boolean,
   start_year int,
   end_year int,
