@@ -46,7 +46,8 @@ DROP TABLE if exists title_ratings;
 CREATE TABLE if not exists title_ratings (
   title_id char(9) primary key,
   average_rating numeric,
-  num_votes int
+  num_votes int,
+  FOREIGN KEY (title_id) REFERENCES title_basics (title_id)
 );
 
 DROP TABLE if exists directors;
@@ -92,15 +93,17 @@ CREATE TABLE if not exists stars (
 DROP TABLE if exists person_professions;
 
 CREATE TABLE if not exists person_professions (
-  person_id char(9) primary key,
+  person_id char(9),
   professions varchar(25),
+  PRIMARY KEY (person_id, professions),
   FOREIGN KEY (person_id) REFERENCES person_basics (person_id)
 );
 
 DROP TABLE if exists title_genres;
 
 CREATE TABLE if not exists title_genres (
-  title_id char(9) primary key,
+  title_id char(9),
   genre varchar(11),
+  PRIMARY KEY (title_id, genre),
   FOREIGN KEY (title_id) REFERENCES title_basics (title_id)
 );
