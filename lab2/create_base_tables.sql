@@ -75,9 +75,9 @@ DROP TABLE if exists principals;
 CREATE TABLE if not exists principals (
   title_id char(9),
   person_id char(9),
-  PRIMARY KEY (title_id, person_id),
-  FOREIGN KEY (title_id) REFERENCES title_basics (title_id) ON DELETE CASCADE,
-  FOREIGN KEY (person_id) REFERENCES person_basics (person_id) ON DELETE CASCADE
+  PRIMARY KEY (title_id, person_id)
+  /*FOREIGN KEY (title_id) REFERENCES title_basics (title_id) ON DELETE CASCADE,
+  FOREIGN KEY (person_id) REFERENCES person_basics (person_id) ON DELETE CASCADE*/
 );
 
 DROP TABLE if exists stars;
@@ -85,9 +85,9 @@ DROP TABLE if exists stars;
 CREATE TABLE if not exists stars (
   person_id char(9),
   title_id char(9),
-  PRIMARY KEY (person_id, title_id),
-  FOREIGN KEY (person_id) REFERENCES person_basics (person_id) ON DELETE CASCADE,
-  FOREIGN KEY (title_id) REFERENCES title_basics (title_id) ON DELETE CASCADE
+  PRIMARY KEY (person_id, title_id)
+  /*FOREIGN KEY (person_id) REFERENCES person_basics (person_id) ON DELETE CASCADE,
+  FOREIGN KEY (title_id) REFERENCES title_basics (title_id) ON DELETE CASCADE*/
 );
 
 DROP TABLE if exists person_professions;
