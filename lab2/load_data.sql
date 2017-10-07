@@ -1,6 +1,6 @@
 \c imdb;
 
-/*\copy title_basics from C:/Users/Peter/Documents/FALL2017/Database/pg/title_basics.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
+\copy title_basics from C:/Users/Peter/Documents/FALL2017/Database/pg/title_basics.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
 
 \copy person_basics from C:/Users/Peter/Documents/FALL2017/Database/pg/person_basics.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
 
@@ -38,20 +38,8 @@
 
 \copy principals from 'C:/Users/Peter/Documents/FALL2017/Database/split_principals/xam' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
 
-COPY 1999999
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 2000000
-COPY 1139893
-*/
+alter table principals add foreign key(title_id) references title_basics(title_id);
+alter table principals add foreign key(person_id) references person_basics(person_id);
 
 \copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xaa' (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
 
@@ -67,6 +55,10 @@ COPY 1139893
 
 \copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xag' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
 
-/*\copy person_professions from C:/Users/Peter/Documents/FALL2017/Database/pg/person_professions.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
 
-\copy title_genres from C:/Users/Peter/Documents/FALL2017/Database/pg/title_genres.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');*/
+alter table stars add FOREIGN KEY (title_id) REFERENCES title_basics (title_id) ON DELETE CASCADE;
+alter table stars add FOREIGN KEY (person_id) REFERENCES person_basics (person_id) ON DELETE CASCADE;
+
+\copy person_professions from C:/Users/Peter/Documents/FALL2017/Database/pg/person_professions.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+\copy title_genres from C:/Users/Peter/Documents/FALL2017/Database/pg/title_genres.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');

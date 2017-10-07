@@ -1,11 +1,11 @@
-/*\c dev
+\c dev
 
 drop database if exists imdb;
 
 create database imdb;
 
 \c imdb
-*/
+
 
 DROP TABLE if exists title_basics;
 CREATE TABLE if not exists title_basics (
@@ -55,7 +55,6 @@ CREATE TABLE if not exists directors (
 );
 
 DROP TABLE if exists writers;
-
 CREATE TABLE if not exists writers (
   title_id char(9),
   person_id char(9),
