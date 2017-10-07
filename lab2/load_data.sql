@@ -37,9 +37,36 @@
 \copy principals from 'C:/Users/Peter/Documents/FALL2017/Database/split_principals/xal' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
 
 \copy principals from 'C:/Users/Peter/Documents/FALL2017/Database/split_principals/xam' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+COPY 1999999
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 2000000
+COPY 1139893
 */
-\copy stars from C:/Users/Peter/Documents/FALL2017/Database/pg/stars.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
 
-\copy person_professions from C:/Users/Peter/Documents/FALL2017/Database/pg/person_professions.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
+\copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xaa' (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
 
-\copy title_genres from C:/Users/Peter/Documents/FALL2017/Database/pg/title_genres.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
+\copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xab' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+\copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xac' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+\copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xad' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+\copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xae' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+\copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xaf' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+\copy stars from 'C:/Users/Peter/Documents/FALL2017/Database/split_stars/xag' (header FALSE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+/*\copy person_professions from C:/Users/Peter/Documents/FALL2017/Database/pg/person_professions.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');
+
+\copy title_genres from C:/Users/Peter/Documents/FALL2017/Database/pg/title_genres.csv (header TRUE, format csv, delimiter ',', null '', encoding 'UTF8');*/
