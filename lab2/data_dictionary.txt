@@ -1,0 +1,47 @@
+This is a star schema, as instructed in the Lab2 instructions.
+We recognize that the dim_title table setup results in a database that
+is only normalized to the 1NF (specifically, dim_title.start_year, end_year,
+and title_type depend only on the title_id and not on the genre, but genre
+must be part of the primary key as several title_ids are classified into 
+multiple genres. A different database schema could be created by splitting
+the dim_title form and normalizing to 3NF as discusse in class, but 
+this would adhere less closely to the dimensional schema which was described
+as required in the lab and also which was described in an article posted
+by the instructor in Piazza.
+
+Concisely, fact_title represents the fact table, dim_title represents
+the only dimension table, while the other two tables are solely to supplement
+analysis in the business case described in the Lab2 assignment.
+
+Names and detailed explanations of tables are below:
+
+1. fact_title: holds relevant but not essential attributes.
+--Information serves as supplementary to those attributes that are to be queried on.
+--Serves as fact table for this star schema.
+--1:1 relationship with fact_title.title_id <-> title_episodes.title_id 
+----explained under title_episodes table description.
+--1:m relationship with fact_title.title_id <-> dim_title.title_id
+----explained in dim_title table description.
+
+2. title_episodes: for supplemental business case use.
+--Provides information for further analysis (i.e. series information)
+if query results only yield episode information.
+--1:1 relationship with fact_title.title_id <-> title_episodes.title_id
+----allows analyst to look up parent title from episode title query results
+--1:m relationship with fact_title.title_id <-> title_episodes.parent_title_id
+----To map back to supplementary information in fact_title table
+
+3. dim_title: contains essential attributes.
+--Contains all attributes which management has demonstrated interest in analyzing
+--Serves as dimensional table for this star schema.
+--m:1 relationship with dim_title.title_id <-> fact_title.title_id
+----If title_id is classified into multiple genres, there will be 
+----multiple rows with the same title_id
+--m:1 relationship with dim_title.average_rating <-> rating_class.average_rating
+----explained under rating_class description.
+
+4. rating_class: classifies numeric rating into management categorical terms
+--1:m relationship with rating_class.average_rating <-> dim_title.average_rating
+----Allows analyst to lookup and sort by categorical management term.
+
+
