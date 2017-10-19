@@ -6,8 +6,9 @@ JOIN title_ratings tr ON tb.title_id = tr.title_id
 WHERE tb.start_year BETWEEN 2005 AND 2015
 GROUP BY pb.primary_name, tr.average_rating, tb.start_year
 HAVING tr.average_rating > 9.5
-ORDER BY year desc, num_movies desc;
-=======
+ORDER BY year desc, num_movies desc
+LIMIT 20;
+
 
 /* Movie writers and their longest titles;
 Only include movies that are full-length (>90min.);
