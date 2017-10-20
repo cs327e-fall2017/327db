@@ -33,9 +33,18 @@ ON av.title_type = o.title_type AND av.year = o.year AND av.genre = o.genre;
 
 /* Set values to null */
 UPDATE Title_Rating_Facts
-SET title_type = 0 WHERE title_type = NULL,
-SET year = 0 WHERE year = NULL,
-SET genre = 0 WHERE genre = NULL,
-SET appalling_titles = 0 WHERE appalling_titles = NULL,
-SET average_titles = 0 WHERE average_titles = NULL,
-SET outstanding_titles = 0 WHERE outstanding_titles = NULL;
+SET title_type = 0 WHERE title_type IS NULL;
+UPDATE Title_Rating_Facts
+SET year = 0 WHERE year IS NULL;
+UPDATE Title_Rating_Facts
+SET genre = 0 WHERE genre IS NULL;
+UPDATE Title_Rating_Facts
+SET appalling_titles = 0 WHERE appalling_titles IS NULL;
+UPDATE Title_Rating_Facts
+SET outstanding_titles = 0 WHERE outstanding_titles IS NULL;
+UPDATE Title_Rating_Facts
+SET average_titles = 0 WHERE average_titles IS NULL;
+
+/* Delete Null PK Values */
+DELETE FROM Title_Rating_Facts
+WHERE title_type == 0 OR year == 0 OR genre == 0;

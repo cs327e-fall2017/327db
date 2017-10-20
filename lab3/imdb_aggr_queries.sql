@@ -12,7 +12,9 @@ LIMIT 20;
 
 /* Movie writers and their longest titles;
 Only include movies that are full-length (>90min.);
-Sort by name of writer*/
+Sort by name of writer.
+For visualization, useful to see if there's a corellation between 
+writer age (i.e. birthday) and longest one*/
 SELECT pb.primary_name AS writer, pb.birth_year as birth_year, MAX(tb.runtime_minutes) AS longest_length
 FROM writers w INNER JOIN person_basics pb ON pb.person_id = w.person_id
 INNER JOIN title_basics tb ON w.title_id = tb.title_id

@@ -21,8 +21,7 @@ INNER JOIN title_basics tb ON w.title_id = tb.title_id
 WHERE tb.title_type = 'movie' AND pb.birth_year IS NOT NULL
 GROUP BY writer, birth_year
 HAVING MAX(tb.runtime_minutes) > 90
-ORDER BY writer
-LIMIT 20;
+ORDER BY writer;
 
 
 
