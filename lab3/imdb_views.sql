@@ -1,14 +1,13 @@
 /* Query 1: Count of an actor that have starred in a form of media whose average rating is higher than 9.5 between the years 2005 - 2015*/
-CREATE MATERIALIZED VIEW v_foreign_director_genre A
+CREATE MATERIALIZED VIEW v_highly_rated_actors AS
 SELECT pb.primary_name AS actor_name, count(*) AS num_media, tb.start_year as year
 FROM person_basics pb JOIN stars s ON pb.person_id = s.person_id
 JOIN title_basics tb ON s.title_id = tb.title_id
 JOIN title_ratings tr ON tb.title_id = tr.title_id
 WHERE tb.start_year BETWEEN 2005 AND 2015
 GROUP BY pb.primary_name, tr.average_rating, tb.start_year
-HAVING tr.average_rating > 9.5
-ORDER BY year desc, num_media desc
-LIMIT 20;
+HAVING tr.average_rating > 9.9
+ORDER BY year desc, num_media desc;
 
 
 /* Movie writers and their longest titles;

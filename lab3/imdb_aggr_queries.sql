@@ -28,9 +28,18 @@ SELECT pb.primary_name AS director, tg.genre AS genre, count(*) as num_media
 FROM person_basics pb INNER JOIN directors d ON pb.person_id=d.person_id
 INNER JOIN title_genres tg ON d.title_id=tg.title_id
 RIGHT OUTER JOIN title_basics tb ON d.title_id=tb.title_id
-WHERE original_title is not null AND pb.death_year is not null
+WHERE original_title IS NOT NULL AND pb.death_year IS NOT NULL
 GROUP BY director, genre
 HAVING count(*) > 5
-ORDER BY genre;
+ORDER BY genre, director
+LIMIT 20;
 
 
+/* Query 3: Number of seasons/episodes and the show's average rating*/
+SELECT tb.primary_title AS show_title, MAX(te.season_num) AS show_max_season, MAX(te.episode_num) AS show_max_episode, AVG(tr.average_rating) AS show_rating
+FROM title_basics tb INNER JOIN title_episodes te ON tb.title_id=te.parent_title_id
+INNER JOIN title_ratings tr ON tb.title_id = tr.title_ratings
+WHERE te.parent_title_id IS NOT NULL AND te.episode_num IS NOT NULL AND te.season_num IS NOT NULL
+GROUP BY show_title, show_max_season, show_max_episode
+ORDER BY show_rating
+LIMIT 20;
