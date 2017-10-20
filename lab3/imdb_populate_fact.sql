@@ -48,3 +48,17 @@ SET average_titles = 0 WHERE average_titles IS NULL;
 /* Delete Null PK Values */
 DELETE FROM Title_Rating_Facts
 WHERE title_type == 0 OR year == 0 OR genre == 0;
+
+/* Add Primary Key Constraints */
+ALTER TABLE Title_Rating_Facts
+ADD CONSTRAINT PK_type_genre_year PRIMARY KEY (title_type, year, genre);
+
+/*Part f aggregate query */
+CREATE VIEW v_outstanding_titles_by_year_genre AS
+SELECT TRF.year, TRF.genre, SUM(TRF.outstanding_titles)
+FROM Title_Rating_Facts TRF
+WHERE year >= 1930
+GROUP BY TRF.year, TRF.genre
+HAVING SUM(TRF.outstanding_titles) > 0
+ORDER BY TRF.year, TRF.genre
+LIMIT 100;
