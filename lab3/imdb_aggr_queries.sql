@@ -35,4 +35,3 @@ GROUP BY director, genre
 HAVING count(*) > 5
 ORDER BY genre;
 
-
