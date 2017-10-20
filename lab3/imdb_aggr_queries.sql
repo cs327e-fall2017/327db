@@ -35,3 +35,22 @@ GROUP BY director, genre
 HAVING count(*) > 5
 ORDER BY genre;
 
+/* Earliest instance of each genre.
+If database has no instance of a particular genre,
+show that this is the case */
+SELECT tg.genre, MIN(tb.start_year) as earliest_instance
+FROM title_basics tb RIGHT OUTER JOIN title_genres tg ON tg.title_id=tb.title_id
+WHERE tb.start_year > 1900 AND tb.runtime_minutes > 80
+GROUP BY tg.genre
+ORDER BY MIN(start_year);
+
+/* Wealthy figures.
+List of principals and how many screentime minutes
+they have been the principal for, and the type
+of works they were principals for. */
+SELECT pb.primary_name as Name, tb.title_type as type, SUM(tb.runtime_minutes) as sum
+FROM person_basics pb JOIN principals p ON pb.person_id = p.person_id
+JOIN title_basics tb on p.title_id = tb.title_id
+GROUP BY pb.primary_name, tb.title_type
+HAVING SUM(tb.runtime_minutes) > 2000
+ORDER BY SUM(tb.runtime_minutes) DESC;
