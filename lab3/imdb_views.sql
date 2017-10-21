@@ -20,12 +20,11 @@ INNER JOIN title_basics tb ON w.title_id = tb.title_id
 WHERE tb.title_type = 'movie' AND pb.birth_year IS NOT NULL
 GROUP BY writer, birth_year
 HAVING MAX(tb.runtime_minutes) > 90
-ORDER BY writer
-LIMIT 20;
+ORDER BY writer;
 
 
 
-/* Query 3: Living directors that only worked on more than five foreign media and the number they made*/
+/* Query 2: Living directors that only worked on more than five foreign media and the number they made*/
 CREATE MATERIALIZED VIEW v_foreign_director_genre AS
 SELECT pb.primary_name AS director, tg.genre AS genre, count(*) as num_media
 FROM person_basics pb INNER JOIN directors d ON pb.person_id=d.person_id
@@ -35,3 +34,38 @@ WHERE original_title is not null AND pb.death_year is not null
 GROUP BY director, genre
 HAVING count(*) > 5
 ORDER BY genre, director;
+
+
+/* Earliest instance of each genre.
+If database has no instance of a particular genre,
+show that this is the case */
+CREATE MATERIALIZED VIEW v_genre_starts AS
+SELECT tg.genre, MIN(tb.start_year) as earliest_instance
+FROM title_basics tb RIGHT OUTER JOIN title_genres tg ON tg.title_id=tb.title_id
+WHERE tb.start_year > 1900 AND tb.runtime_minutes > 80
+GROUP BY tg.genre
+ORDER BY MIN(start_year);
+
+
+/* Query 3: Number of seasons/episodes and the show's average rating*/
+CREATE MATERIALIZED VIEW v_season_num_rating AS
+SELECT tb.primary_title AS show_title, MAX(te.season_num) AS show_max_season, AVG(tr.average_rating) AS show_rating
+FROM title_basics tb INNER JOIN title_episodes te ON tb.title_id=te.parent_title
+INNER JOIN title_ratings tr ON tb.title_id = tr.title_id
+WHERE te.parent_title IS NOT NULL AND te.episode_num IS NOT NULL AND te.season_num IS NOT NULL
+GROUP BY tb.primary_title
+ORDER BY show_title, show_rating
+LIMIT 20;
+
+
+/* Wealthy figures.
+List of principals and how many screentime minutes
+they have been the principal for, and the type
+of works they were principals for. */
+CREATE MATERIALIZED VIEW v_wealthy_people_minutes AS
+SELECT pb.primary_name as Name, tb.title_type as type, SUM(tb.runtime_minutes) as sum
+FROM person_basics pb JOIN principals p ON pb.person_id = p.person_id
+JOIN title_basics tb on p.title_id = tb.title_id
+GROUP BY pb.primary_name, tb.title_type
+HAVING SUM(tb.runtime_minutes) > 2000
+ORDER BY SUM(tb.runtime_minutes) DESC;
