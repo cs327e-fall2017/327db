@@ -25,15 +25,17 @@ ORDER BY writer
 LIMIT 20;
 
 
-/* Query 3: Living directors that only worked on more than five foreign media and the number they made*/
+/* Query 2: Living directors that only worked on more than five foreign media and the number they made*/
 SELECT pb.primary_name AS director, tg.genre AS genre, count(*) as num_media
 FROM person_basics pb INNER JOIN directors d ON pb.person_id=d.person_id
 INNER JOIN title_genres tg ON d.title_id=tg.title_id
 RIGHT OUTER JOIN title_basics tb ON d.title_id=tb.title_id
-WHERE original_title is not null AND pb.death_year is not null
+WHERE original_title IS NOT NULL AND pb.death_year IS NOT NULL
 GROUP BY director, genre
 HAVING count(*) > 5
-ORDER BY genre;
+ORDER BY genre, director
+LIMIT 20;
+
 
 /* Earliest instance of each genre.
 If database has no instance of a particular genre,
@@ -42,7 +44,19 @@ SELECT tg.genre, MIN(tb.start_year) as earliest_instance
 FROM title_basics tb RIGHT OUTER JOIN title_genres tg ON tg.title_id=tb.title_id
 WHERE tb.start_year > 1900 AND tb.runtime_minutes > 80
 GROUP BY tg.genre
-ORDER BY MIN(start_year);
+ORDER BY MIN(start_year)
+LIMIT 20;
+
+
+/* Query 3: Number of seasons/episodes and the show's average rating*/
+SELECT tb.primary_title AS show_title, MAX(te.season_num) AS show_max_season, AVG(tr.average_rating) AS show_rating
+FROM title_basics tb INNER JOIN title_episodes te ON tb.title_id=te.parent_title
+INNER JOIN title_ratings tr ON tb.title_id = tr.title_id
+WHERE te.parent_title IS NOT NULL AND te.episode_num IS NOT NULL AND te.season_num IS NOT NULL
+GROUP BY tb.primary_title
+ORDER BY show_title, show_rating
+LIMIT 20;
+
 
 /* Wealthy figures.
 List of principals and how many screentime minutes
@@ -53,4 +67,5 @@ FROM person_basics pb JOIN principals p ON pb.person_id = p.person_id
 JOIN title_basics tb on p.title_id = tb.title_id
 GROUP BY pb.primary_name, tb.title_type
 HAVING SUM(tb.runtime_minutes) > 2000
-ORDER BY SUM(tb.runtime_minutes) DESC;
+ORDER BY SUM(tb.runtime_minutes) DESC
+LIMIT 20;
