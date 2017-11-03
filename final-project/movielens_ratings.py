@@ -82,6 +82,7 @@ def print_rdd(rdd, logfile):
 
   f = open(log_path + logfile, "w") 
 
+  # Prints all elements in the RDD
   results = rdd.collect() 
 
   counter = 0
@@ -120,12 +121,13 @@ init()
 
 lines = sc.textFile(ratings_file)
 
+# Runs parse_line(line) for each line in the text file, i.e. splits each line on comma and returns modie_id, rating key-value pair, adding results to new RDD
 rdd = lines.map(parse_line) # movie_id, rating
 
 #print_rdd(rdd, "movie_rating_pairs")
 
 
-
+# Creates new rdd with (rating, 1) tuples as the value for each key in rdd
 rdd_pair = rdd.mapValues(lambda rating: (rating, 1)) # movie_id, (rating, 1)
 
 #print_rdd(rdd_pair, "movie_rating_one_pairs") # print rdd
@@ -145,7 +147,7 @@ def add_ratings_by_movie(rating1, rating2):
   return (rating_sum_total, rating_occurrences)
 
 
-
+# Creates new rdd grouped by movie id; movie_ids are keys, values are tuples with (sum of all ratings for movie id, number of ratings for id)
 rdd_totals = rdd_pair.reduceByKey(add_ratings_by_movie) # movie_id (total rating, total occurrences)
 
 #print_rdd(rdd_totals, "movie_total_rating_occurrences") # print rdd
@@ -163,11 +165,12 @@ def avg_ratings_by_movie(rating_total_occur):
   return avg_rating
 
 
-
+# Creates new rdd similar to rdd_totals but replacing tuple value with float value that is average of all ratings for movie_id key
 rdd_avgs = rdd_totals.mapValues(avg_ratings_by_movie) # movie_id, average rating
 
 #print_rdd(rdd_avgs, "movie_rating_averages") # print rdd
 
+# Caches rdd_avgs in memory for faster access
 rdd_avgs.cache()
 
 
@@ -192,12 +195,13 @@ def parse_links_line(line):
 
 links_lines = sc.textFile(links_file)
 
+# For each line in infile links_file, creates rdd with key-value pairs of key=movie_id, value=imdb_id by splitting on commas
 rdd_links = links_lines.map(parse_links_line) # movie_id, imdb_id
 
 #print_rdd(rdd_links, "rdd_links")
 
 
-
+# Creates rdd that joins rdd_avgs and rdd_links where resulting rdd has key=movie_id, value = (avg_rating, imdb_id) tuple
 rdd_joined = rdd_avgs.join(rdd_links)
 
 #print_rdd(rdd_joined, "movielens_imdb_joined")
@@ -250,6 +254,7 @@ def add_imdb_id_prefix(tupl):
 
 # add imdb_id prefix () 
 
+# Creates new rdd from rdd_joined; new rdd has key=imdb_id modified by above fcn which appends proper imdb prefix to id, value=avg_rating
 rdd_ratings_by_imdb = rdd_joined.map(add_imdb_id_prefix) 
 
 #print_rdd(rdd_ratings_by_imdb, "rdd_ratings_by_imdb")
@@ -290,12 +295,12 @@ def save_rating_to_db(list_of_tuples):
 
     except Exception as e:
 
-        print "Error in save_rating_to_db: ", e.message
+        print ("Error in save_rating_to_db: ", e.message)
 
   
 
 
-
+# Saves all data to the RDS instance
 rdd_ratings_by_imdb.foreachPartition(save_rating_to_db)
 
 
