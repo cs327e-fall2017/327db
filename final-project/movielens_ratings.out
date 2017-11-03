@@ -1,0 +1,4 @@
+SELECT count(*)
+FROM Title_Ratings tr
+WHERE movielens_rating is not null
+GROUP BY movielens_rating
