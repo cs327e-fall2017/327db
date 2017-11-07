@@ -1,0 +1,3 @@
+SELECT count(*)
+FROM Title_Tags tt
+GROUP BY title_id;
