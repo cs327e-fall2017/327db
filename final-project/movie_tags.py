@@ -123,8 +123,6 @@ def add_imdb_id_prefix(tupl):
   else:
      imdb_id_str = "tt" + imdb_id_str
 
-     
-
   return (imdb_id_str, tag)
 
 
@@ -139,18 +137,20 @@ print_rdd(formatted_rdd, "formatted_rdd")
 def save_to_db(list_of_tuples):
     conn = psycopg2.connect(database=rds_database, user=rds_user, password=rds_password, host=rds_host, port=rds_port)
     conn.autocommit = True
+    #Added the line below based on movielens_ratings.py
+    cur = conn.cursor()
 
     
 
     # Add logic to extract each element (step 7)
-
-    
+    for tupl in list_of_tuples:
+      imdb_id_str, tag = tupl
+      
+      update_stmt = "UPDATE Title_Tags SET title_id = %s WHERE tag = %s"
 
     try:
-
-        # Add logic to perform insert statement (step 7)
-
-    
+      # Add logic to perform insert statement (step 7)
+      cur.execute(update_stmt, (imdb_id_str, tag))    
 
     except Exception as e:
         print "Error in save_to_db: ", e.message
