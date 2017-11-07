@@ -54,15 +54,12 @@ def print_rdd(rdd, logfile):
 
 
 def parse_line(line):
-
-
-
   # Add logic for parsing the line (step 3)
-
-  
-
+  # Structure borrowed from movielens_rating.py
+  fields = line.split(",")
+  movie_id = int(fields[1])
+  tag = fields[2]
   return (movie_id, tag)
-
 
 
 lines = sc.textFile(tags_file)
