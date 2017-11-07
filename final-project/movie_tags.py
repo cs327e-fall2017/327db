@@ -69,7 +69,7 @@ print_rdd(rdd_tags, "movie_tag_pairs")
 
 
 # Add logic for distinct (step 4)
-
+rdd_distinct_tags = rdd_tags.distinct()
 
 
 rdd_distinct_tags.cache()
