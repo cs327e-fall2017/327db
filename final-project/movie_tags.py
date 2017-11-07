@@ -97,6 +97,7 @@ rdd_links = links_lines.map(parse_links_line) # movie_id, imdb_id
 
 
 # Add logic for joining rdd_links and rdd_distinct_tags (step 5)
+rdd_joined = rdd_links.join(rdd_distinct_tags, rdd_links.movie_id==rdd_distinct_tags.movie_id)
 
 print_rdd(rdd_joined, "movielens_imdb_joined")
 
