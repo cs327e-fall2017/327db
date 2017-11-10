@@ -89,7 +89,8 @@ def parse_links_line(line):
 # lookup imdb id
 links_lines = sc.textFile(links_file)
 rdd_links = links_lines.map(parse_links_line) # movie_id, imdb_id
-print_rdd(rdd_links, "rdd_links")
+
+#print_rdd(rdd_links, "rdd_links")
 
 
 
@@ -126,7 +127,7 @@ def add_imdb_id_prefix(tupl):
 
 # add the "tt0" prefix to imdb_id 
 
-formatted_rdd = rdd_joined.map(add_imdb_id_prefix)
+formatted_rdd = rdd_joined.map(add_imdb_id_prefix) 
 print_rdd(formatted_rdd, "formatted_rdd")
 
 
@@ -145,12 +146,12 @@ def save_to_db(list_of_tuples):
       
       update_stmt = "INSERT INTO Title_Tags (title_id, tag) VALUES (%s, %s)"
 
-      try:
-        # Add logic to perform insert statement (step 7)
-        cur.execute(update_stmt, (imdb_id_str, tag))    
+    try:
+      # Add logic to perform insert statement (step 7)
+      cur.execute(update_stmt, (imdb_id_str, tag))    
 
-      except Exception as e:
-          print "Error in save_to_db: ", e.message
+    except Exception as e:
+        print "Error in save_to_db: ", e.message
 
 
 
