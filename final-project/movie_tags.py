@@ -1,7 +1,5 @@
 import psycopg2
-
 import sys, os, configparser
-
 from pyspark import SparkConf, SparkContext
 
 
