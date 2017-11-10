@@ -97,7 +97,7 @@ rdd_links = links_lines.map(parse_links_line) # movie_id, imdb_id
 
 
 # Add logic for joining rdd_links and rdd_distinct_tags (step 5)
-rdd_joined = rdd_links.join(rdd_distinct_tags, rdd_links.movie_id==rdd_distinct_tags.movie_id)
+rdd_joined = rdd_distinct_tags.join(rdd_links)
 
 print_rdd(rdd_joined, "movielens_imdb_joined")
 
@@ -146,7 +146,7 @@ def save_to_db(list_of_tuples):
     for tupl in list_of_tuples:
       imdb_id_str, tag = tupl
       
-      update_stmt = "UPDATE Title_Tags SET title_id = %s WHERE tag = %s"
+      update_stmt = "INSERT INTO Title_Tags (title_id, tag) VALUES (%s, %s)"
 
     try:
       # Add logic to perform insert statement (step 7)
@@ -161,4 +161,4 @@ formatted_rdd.foreachPartition(save_to_db)
 
 
 # free up resources
-sc.stop(
+sc.stop()
