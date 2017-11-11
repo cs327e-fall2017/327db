@@ -1,3 +1,6 @@
+# Query
 SELECT count(*)
-FROM Title_Tags tt
-GROUP BY title_id;
+FROM Title_Tags tt;
+
+#Output
+200380
