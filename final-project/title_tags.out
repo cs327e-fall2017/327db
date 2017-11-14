@@ -1,4 +1,4 @@
-# Query
+#SQL Query
 SELECT count(*)
 FROM Title_Tags tt;
 
