@@ -50,9 +50,43 @@ def print_rdd(rdd, logfile):
   
 ################## process the-numbers dataset #################################
 
-def parse_line(line):
+def parse_year(fields):
+    date = fields.split("/")
+    year = int(date[2])
 
+    return (year)
+
+def parse_genre(fields):
+    if fields == "Thriller/Suspense":
+        return ("Thriller")
+    else if fields == "Black Comedy":
+        return ("Comedy")
+    else if fields == "Romantic Comedy":
+        return ("Romance")
+    else if not fields:
+        genre = fields.strip()
+        return (genre)
+    return ("")
+
+
+def parse_money(fields):
+    if not fields:
+        fields = line.split("$")
+        total = fields[1].replace(",", "").replace("/", "").strip()
+        return (total)
+
+    else:
+        return (-1)
+
+def parse_line(line):
     # add logic for parsing and cleaning the fields as specified in step 4 of assignment sheet
+
+    fields = line.split("\t")
+    release_year = int fields[0](parse_year)
+    movie_title = fields[1].upper().strip().encode('utf-8')
+    genre = fields[2](parse_genre)
+    budget = int fields[3](parse_money)
+    box_office = int fields[4](parse_money)
     
     return (release_year, movie_title, genre, budget, box_office)  
   
@@ -63,7 +97,7 @@ print_rdd(mapped_rdd, "mapped_rdd")
 
 def save_to_db(list_of_tuples):
   
-    conn = psycopg2.connect(database=rds_database, user=rds_user, password=rds_password, host=rds_host, port=rds_port)
+    conn = psycopg2.connect(database=imdb, user=master, password=RDSkey4327, host=cs327epgrds.cjskz2oehjoj.us-west-2.rds.amazonaws.com, port=5432)
     conn.autocommit = True
     cur = conn.cursor()
     
