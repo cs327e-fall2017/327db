@@ -82,11 +82,11 @@ def parse_line(line):
     # add logic for parsing and cleaning the fields as specified in step 4 of assignment sheet
 
     fields = line.split("\t")
-    release_year = int fields[0](parse_year)
+    release_year = int (parse_year(fields[0]))
     movie_title = fields[1].upper().strip().encode('utf-8')
-    genre = fields[2](parse_genre)
-    budget = int fields[3](parse_money)
-    box_office = int fields[4](parse_money)
+    genre = parse_genre(fields[2])
+    budget = int (parse_money(fields[3]))
+    box_office = int (parse_money(fields[4]))
     
     return (release_year, movie_title, genre, budget, box_office)  
   
@@ -95,11 +95,41 @@ base_rdd = sc.textFile(the_numbers_files)
 mapped_rdd = base_rdd.map(parse_line) 
 print_rdd(mapped_rdd, "mapped_rdd")
 
+select_stmt = ""
+
 def save_to_db(list_of_tuples):
   
     conn = psycopg2.connect(database=imdb, user=master, password=RDSkey4327, host=cs327epgrds.cjskz2oehjoj.us-west-2.rds.amazonaws.com, port=5432)
     conn.autocommit = True
-    cur = conn.cursor()
+
+    for tupl in list_of_tuples:
+        release_year, movie_title, genre, budget, box_office = tupl
+
+        select_stmt = "select title_id, UPPER(primary_title) from title_basics tb join title_genres tg on tb.title_id = tg.title_id where start_year = %s and UPPER(primary_title) = %s"
+        cur = conn.cursor(select_stmt, (release_year, movie_title))
+
+        rows = cur.fetchall()
+        if len(rows) == 1:
+            update_stmt = "INSERT INTO Title_Financials (title_id, budget, box_office) VALUES (%s, %s, %s)"
+        elif len(rows) > 1:
+            if box_office > 0:
+                select_stmt += "and title_type <> 'TV_Episodes'"
+                cur = conn.cursor(select_stmt, (release_year, movie_title))
+            else:
+                select_stmt += "and genre = %s"
+                cur = conn.cursor(select_stmt, (release_year, movie_title, genre))
+            rows = cur.fetchall()
+
+            print rows
+            update_stmt = "INSERT INTO Title_Financials (title_id, budget, box_office) VALUES (%s, %s, %s)"
+        try:
+            # Add logic to perform insert statement (step 7)
+            cur.execute(update_stmt, (rows[0], budget, box_office))    
+
+        except Exception as e:
+            print "Error in save_to_db: ", e.message
+
+
     
     # add logic to look up the title_id in the database as specified in step 5 of assignment sheet
     # add logic to write out the financial record to the database as specified in step 5 of assignment sheet
