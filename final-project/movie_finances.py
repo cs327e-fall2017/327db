@@ -59,22 +59,21 @@ def parse_year(fields):
 def parse_genre(fields):
     if fields == "Thriller/Suspense":
         return ("Thriller")
-    else if fields == "Black Comedy":
+    elif fields == "Black Comedy":
         return ("Comedy")
-    else if fields == "Romantic Comedy":
+    elif fields == "Romantic Comedy":
         return ("Romance")
-    else if not fields:
+    elif len(fields) > 0:
         genre = fields.strip()
         return (genre)
     return ("")
 
 
 def parse_money(fields):
-    if not fields:
-        fields = line.split("$")
-        total = fields[1].replace(",", "").replace("/", "").strip()
+    if len(fields) > 0:
+        total = fields[1].replace("$", "").replace(",", "").replace("/", "").replace('\"', '').strip()
+        print total
         return (total)
-
     else:
         return (-1)
 
@@ -99,25 +98,26 @@ select_stmt = ""
 
 def save_to_db(list_of_tuples):
   
-    conn = psycopg2.connect(database=imdb, user=master, password=RDSkey4327, host=cs327epgrds.cjskz2oehjoj.us-west-2.rds.amazonaws.com, port=5432)
+    conn = psycopg2.connect(database="imdb", user="master", password="RDSkey4327", host="cs327epgrds.cjskz2oehjoj.us-west-2.rds.amazonaws.com", port="5432")
     conn.autocommit = True
 
     for tupl in list_of_tuples:
         release_year, movie_title, genre, budget, box_office = tupl
 
-        select_stmt = "select title_id, UPPER(primary_title) from title_basics tb join title_genres tg on tb.title_id = tg.title_id where start_year = %s and UPPER(primary_title) = %s"
-        cur = conn.cursor(select_stmt, (release_year, movie_title))
+        select_stmt = "select tb.title_id, tb.primary_title from title_basics tb join title_genres tg on tb.title_id = tg.title_id where tb.start_year = %s and UPPER(tb.primary_title) = %s"
+        cur = conn.cursor()
+        cur.execute(select_stmt, (release_year, movie_title))
 
         rows = cur.fetchall()
         if len(rows) == 1:
             update_stmt = "INSERT INTO Title_Financials (title_id, budget, box_office) VALUES (%s, %s, %s)"
         elif len(rows) > 1:
             if box_office > 0:
-                select_stmt += "and title_type <> 'TV_Episodes'"
-                cur = conn.cursor(select_stmt, (release_year, movie_title))
+                select_stmt += "and tb.title_type <> 'tvEpisode'"
+                cur.execute(select_stmt, (release_year, movie_title))
             else:
-                select_stmt += "and genre = %s"
-                cur = conn.cursor(select_stmt, (release_year, movie_title, genre))
+                select_stmt += "and tg.genre = %s"
+                cur.execute(select_stmt, (release_year, movie_title, genre))
             rows = cur.fetchall()
 
             print rows
