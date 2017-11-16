@@ -71,8 +71,7 @@ def parse_genre(fields):
 
 def parse_money(fields):
     if len(fields) > 0:
-        total = fields[1].replace("$", "").replace(",", "").replace("/", "").replace('\"', '').strip()
-        print total
+        total = fields.replace("$", "").replace(",", "").replace('\"', '').strip()
         return (total)
     else:
         return (-1)
@@ -84,8 +83,8 @@ def parse_line(line):
     release_year = int (parse_year(fields[0]))
     movie_title = fields[1].upper().strip().encode('utf-8')
     genre = parse_genre(fields[2])
-    budget = int (parse_money(fields[3]))
-    box_office = int (parse_money(fields[4]))
+    budget = int (parse_money(fields[3].strip()))
+    box_office = int (parse_money(fields[4].strip()))
     
     return (release_year, movie_title, genre, budget, box_office)  
   
