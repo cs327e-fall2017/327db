@@ -1,4 +1,3 @@
-CREATE INDEX year_indx ON Title_Basics (start_year);
-CREATE INDEX p_title_indx ON Title_Basics (UPPER(primary_title));
-CREATE INDEX t_type_indx ON Title_Basics (title_type) WHERE title_type <> 'tvEpisode';
-CREATE INDEX genre_indx ON Title_Genres (genre);
+CREATE INDEX year_title_idx ON Title_Basics (start_year, UPPER(primary_title));
+CREATE INDEX year_title_type_idx ON Title_Basics (start_year, UPPER(primary_title), title_type) WHERE title_type <> 'tvEpisode';
+CREATE INDEX genre_idx ON Title_Genres (genre);
