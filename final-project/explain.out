@@ -2,45 +2,51 @@ imdb=> explain select tb.title_id, tb.primary_title from title_basics tb join ti
 imdb-> where tb.start_year = 2013 and UPPER(tb.primary_title) = 'ELYSIUM';
                                               QUERY PLAN
 ------------------------------------------------------------------------------------------------------
- Nested Loop  (cost=4154.88..77693.45 rows=1647 width=30)
-   ->  Bitmap Heap Scan on title_basics tb  (cost=4154.44..62081.81 rows=1124 width=30)
-         Recheck Cond: (start_year = 2013)
-         Filter: (upper((primary_title)::text) = 'ELYSIUM'::text)
-         ->  Bitmap Index Scan on year_indx  (cost=0.00..4154.16 rows=224764 width=0)
-               Index Cond: (start_year = 2013)
+ Nested Loop  (cost=4768.20..24371.69 rows=1647 width=30)
+   ->  Bitmap Heap Scan on title_basics tb  (cost=4767.77..8760.05 rows=1124 width=30)
+         Recheck Cond: ((upper((primary_title)::text) = 'ELYSIUM'::text) AND (start_year = 2013))
+         ->  BitmapAnd  (cost=4767.77..4767.77 rows=1124 width=0)
+               ->  Bitmap Index Scan on p_title_indx  (cost=0.00..612.80 rows=22432 width=0)
+                     Index Cond: (upper((primary_title)::text) = 'ELYSIUM'::text)
+               ->  Bitmap Index Scan on year_indx  (cost=0.00..4154.16 rows=224764 width=0)
+                     Index Cond: (start_year = 2013)
    ->  Index Only Scan using title_genres_pkey on title_genres tg  (cost=0.43..13.86 rows=3 width=10)
          Index Cond: (title_id = (tb.title_id)::bpchar)
-(8 rows)
+(10 rows)
 
 imdb=> explain select tb.title_id, tb.primary_title from title_basics tb join title_genres tg on tb.title_id = tg.title_id
 imdb-> where tb.start_year = 2013 and UPPER(tb.primary_title) = 'ELYSIUM'
 imdb-> and tb.title_type <> 'tvEpisode';
-                                                    QUERY PLAN
-------------------------------------------------------------------------------------------------------------------
- Nested Loop  (cost=4154.69..67949.68 rows=548 width=30)
-   ->  Bitmap Heap Scan on title_basics tb  (cost=4154.26..62643.54 rows=374 width=30)
-         Recheck Cond: (start_year = 2013)
-         Filter: (((title_type)::text <> 'tvEpisode'::text) AND (upper((primary_title)::text) = 'ELYSIUM'::text))
-         ->  Bitmap Index Scan on year_indx  (cost=0.00..4154.16 rows=224764 width=0)
-               Index Cond: (start_year = 2013)
+                                              QUERY PLAN
+------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=4767.83..14068.63 rows=548 width=30)
+   ->  Bitmap Heap Scan on title_basics tb  (cost=4767.40..8762.48 rows=374 width=30)
+         Recheck Cond: ((upper((primary_title)::text) = 'ELYSIUM'::text) AND (start_year = 2013))
+         Filter: ((title_type)::text <> 'tvEpisode'::text)
+         ->  BitmapAnd  (cost=4767.40..4767.40 rows=1124 width=0)
+               ->  Bitmap Index Scan on p_title_indx  (cost=0.00..612.80 rows=22432 width=0)
+                     Index Cond: (upper((primary_title)::text) = 'ELYSIUM'::text)
+               ->  Bitmap Index Scan on year_indx  (cost=0.00..4154.16 rows=224764 width=0)
+                     Index Cond: (start_year = 2013)
    ->  Index Only Scan using title_genres_pkey on title_genres tg  (cost=0.43..14.16 rows=3 width=10)
          Index Cond: (title_id = (tb.title_id)::bpchar)
-(8 rows)
+(11 rows)
 
 imdb=> explain select tb.title_id, tb.primary_title from title_basics tb join title_genres tg on tb.title_id = tg.title_id
 imdb-> where tb.start_year = 2016 and UPPER(tb.primary_title) = 'ENTER THE FAUN'
-imdb-> and tg.genre = 'comedy'
-imdb-> ;
-                                          QUERY PLAN
------------------------------------------------------------------------------------------------
- Hash Join  (cost=4763.45..63266.15 rows=1 width=30)
+imdb-> and tg.genre = 'comedy';
+                                               QUERY PLAN
+---------------------------------------------------------------------------------------------------------
+ Hash Join  (cost=5376.82..9906.47 rows=1 width=30)
    Hash Cond: ((tb.title_id)::bpchar = tg.title_id)
-   ->  Bitmap Heap Scan on title_basics tb  (cost=4754.98..63252.85 rows=1287 width=30)
-         Recheck Cond: (start_year = 2016)
-         Filter: (upper((primary_title)::text) = 'ENTER THE FAUN'::text)
-         ->  Bitmap Index Scan on year_indx  (cost=0.00..4754.66 rows=257364 width=0)
-               Index Cond: (start_year = 2016)
+   ->  Bitmap Heap Scan on title_basics tb  (cost=5368.35..9893.17 rows=1287 width=30)
+         Recheck Cond: ((upper((primary_title)::text) = 'ENTER THE FAUN'::text) AND (start_year = 2016))
+         ->  BitmapAnd  (cost=5368.35..5368.35 rows=1287 width=0)
+               ->  Bitmap Index Scan on p_title_indx  (cost=0.00..612.80 rows=22432 width=0)
+                     Index Cond: (upper((primary_title)::text) = 'ENTER THE FAUN'::text)
+               ->  Bitmap Index Scan on year_indx  (cost=0.00..4754.66 rows=257364 width=0)
+                     Index Cond: (start_year = 2016)
    ->  Hash  (cost=8.45..8.45 rows=1 width=10)
          ->  Index Scan using genre_indx on title_genres tg  (cost=0.43..8.45 rows=1 width=10)
                Index Cond: ((genre)::text = 'comedy'::text)
-(10 rows)
+(12 rows)
