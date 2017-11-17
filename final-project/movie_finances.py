@@ -106,8 +106,10 @@ def save_to_db(list_of_tuples):
         select_stmt = "select tb.title_id, tb.primary_title from title_basics tb join title_genres tg on tb.title_id = tg.title_id where tb.start_year = %s and UPPER(tb.primary_title) = %s"
         cur = conn.cursor()
         cur.execute(select_stmt, (release_year, movie_title))
-
+        update_stmt = ""
+        
         rows = cur.fetchall()
+
         if len(rows) == 1:
             update_stmt = "INSERT INTO Title_Financials (title_id, budget, box_office) VALUES (%s, %s, %s)"
         elif len(rows) > 1:
@@ -119,14 +121,15 @@ def save_to_db(list_of_tuples):
                 cur.execute(select_stmt, (release_year, movie_title, genre))
             rows = cur.fetchall()
 
-            print rows
+            
             update_stmt = "INSERT INTO Title_Financials (title_id, budget, box_office) VALUES (%s, %s, %s)"
-        try:
-            # Add logic to perform insert statement (step 7)
-            cur.execute(update_stmt, (rows[0], budget, box_office))    
+        if len(rows) != 0:
+            try:
+                # Add logic to perform insert statement (step 7)
+                cur.execute(update_stmt, (rows[0][0], budget, box_office))    
 
-        except Exception as e:
-            print "Error in save_to_db: ", e.message
+            except Exception as e:
+                print "Error in save_to_db: ", e.message
 
 
     
