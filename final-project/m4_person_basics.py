@@ -7,6 +7,9 @@ aws_region = "us-east-1"  # don't change this
 s3_bucket = "cs327e-fall2017-final-project" # don't change this
 the_numbers_files = "s3a://" + s3_bucket + "/cinemalytics/*" # dataset for milestone 3
 
+persons_file = "s3a://" + s3_bucket + "/movielens/persons.csv"
+singer_songs_file = "s3a://" + s3_bucket + "/movielens/singer_songs.csv"
+
 # global variable sc = Spark Context
 sc = SparkContext()
 
@@ -50,48 +53,49 @@ def print_rdd(rdd, logfile):
   
 ################## process the-numbers dataset #################################
 
-def parse_year(fields):
-    date = fields.split("/")
-    year = int(date[2])
+def parse_year(full_date):
+    date = full_date.strip().split("/")
+    year = int(date[0])
 
     return (year)
 
-def parse_genre(fields):
-    if fields == "Thriller/Suspense":
-        return ("Thriller")
-    elif fields == "Black Comedy":
-        return ("Comedy")
-    elif fields == "Romantic Comedy":
-        return ("Romance")
-    elif len(fields) > 0:
-        genre = fields.strip()
-        return (genre)
-    return ("")
 
-
-def parse_money(fields):
-    if len(fields) > 0:
-        total = fields.replace("$", "").replace(",", "").replace('\"', '').strip()
-        return (total)
-    else:
-        return (-1)
-
-def parse_line(line):
+def persons_parse_line(line):
     # add logic for parsing and cleaning the fields as specified in step 4 of assignment sheet
 
-    fields = line.split("\t")
-    release_year = int (parse_year(fields[0]))
-    movie_title = fields[1].upper().strip().encode('utf-8')
-    genre = parse_genre(fields[2])
-    budget = int (parse_money(fields[3].strip()))
-    box_office = int (parse_money(fields[4].strip()))
+    fields = line.split(",")
+    person_id = fields[0].strip()
+    primary_name = fields[1].strip()
+    gender = fields[2].strip()
+    year = parse_year(fields[3])
     
-    return (release_year, movie_title, genre, budget, box_office)  
+    return (person_id, primary_name, gender, year)  
   
 init() 
-base_rdd = sc.textFile(the_numbers_files)
-mapped_rdd = base_rdd.map(parse_line) 
-print_rdd(mapped_rdd, "mapped_rdd")
+base_p_rdd = sc.textFile(persons_file)
+mapped_p_rdd = base_rdd.map(parse_line) 
+
+print_rdd(mapped_p_rdd, "mapped_p_rdd")
+
+
+def singer_songs_parse_line(line):
+    # add logic for parsing and cleaning the fields as specified in step 4 of assignment sheet
+
+    fields = line.split(",")
+    person_id = fields[0].strip()
+    song_id = fields[1].strip()
+
+    return (person_id, song_id)  
+
+base_ss_rdd = sc.textFile(persons_file)
+mapped_ss_rdd = base_rdd.map(parse_line) 
+
+print_rdd(mapped_ss_rdd, "mapped_ss_rdd")
+
+
+
+
+
 
 select_stmt = ""
 
