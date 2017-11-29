@@ -93,58 +93,37 @@ mapped_ss_rdd = base_rdd.map(parse_line)
 print_rdd(mapped_ss_rdd, "mapped_ss_rdd")
 
 
+ss_collection = base_ss_rdd.collect()
+person_id_lst = []
+for tupl in ss_collection:
+    person_id_lst.append(tupl[0])
 
 
+def save_rating_to_db(list_of_tuples):
+  conn = psycopg2.connect(database=rds_database, user=rds_user, password=rds_password, host=rds_host, port=rds_port)
+  conn.autocommit = True
+  cur = conn.cursor()
 
-
-select_stmt = ""
-
-def save_to_db(list_of_tuples):
-  
-    conn = psycopg2.connect(database="imdb", user="master", password="RDSkey4327", host="cs327epgrds.cjskz2oehjoj.us-west-2.rds.amazonaws.com", port="5432")
-    conn.autocommit = True
-
-    for tupl in list_of_tuples:
-        release_year, movie_title, genre, budget, box_office = tupl
-
-        select_stmt = "select tb.title_id, tb.primary_title from title_basics tb join title_genres tg on tb.title_id = tg.title_id where tb.start_year = %s and UPPER(tb.primary_title) = %s"
-        cur = conn.cursor()
-        cur.execute(select_stmt, (release_year, movie_title))
-        update_stmt = ""
-        
-        rows = cur.fetchall()
-
-        if len(rows) == 1:
-            update_stmt = "INSERT INTO Title_Financials (title_id, budget, box_office) VALUES (%s, %s, %s)"
-        elif len(rows) > 1:
-            if box_office > 0:
-                select_stmt += "and tb.title_type <> 'tvEpisode'"
-                cur.execute(select_stmt, (release_year, movie_title))
-            else:
-                select_stmt += "and tg.genre = %s"
-                cur.execute(select_stmt, (release_year, movie_title, genre))
-            rows = cur.fetchall()
-
-            
-            update_stmt = "INSERT INTO Title_Financials (title_id, budget, box_office) VALUES (%s, %s, %s)"
-        if len(rows) != 0:
-            try:
-                # Add logic to perform insert statement (step 7)
-                cur.execute(update_stmt, (rows[0][0], budget, box_office))    
-
-            except Exception as e:
-                print "Error in save_to_db: ", e.message
-
-
+  for tupl in list_of_tuples:
+    person_id, primary_name, gender, year = tupl
     
-    # add logic to look up the title_id in the database as specified in step 5 of assignment sheet
-    # add logic to write out the financial record to the database as specified in step 5 of assignment sheet
-   
-    cur.close()
-    conn.close()
+    #print "imdb_id_str = " + imdb_id_str
+    #print "avg_rating = " + str(avg_rating)
+    #update_stmt = "update title_ratings set movielens_rating = " + str(avg_rating) + " where title_id = '" + imdb_id_str + "'" 
+    #print "update_stmt = " + update_stmt + "\n"
+
+    update_stmt = "INSERT INTO Person_Basics (person_id, primary_name, birth_year, gender) VALUES (%s, %s, %s, %s)"
+
+    if person_id in person_id_lst:
+        try:
+            cur.execute(update_stmt, (person_id, primary_name, gender, year))
+        except Exception as e:
+            print ("Error in save_rating_to_db: ", e.message)
+
   
-  
-mapped_rdd.foreachPartition(save_to_db)
+# Saves all data to the RDS instance
+base_p_rdd.foreachPartition(save_rating_to_db)
+
 
 # free up resources
-sc.stop() 
+sc.stop()
