@@ -52,7 +52,7 @@ def print_rdd(rdd, logfile):
   f.close()
   
 ################## process the-numbers dataset #################################
-
+# Extract year from date
 def parse_year(full_date):
     date = full_date.strip().split("-")
     if len(full_date) > 0:
@@ -62,9 +62,8 @@ def parse_year(full_date):
 
     return (year)
 
-
+# Parse line from persons.csv
 def persons_parse_line(line):
-    # add logic for parsing and cleaning the fields as specified in step 4 of assignment sheet
 
     fields = line.split(",")
     person_id = fields[0].strip()
@@ -74,15 +73,17 @@ def persons_parse_line(line):
     
     return (person_id, primary_name, gender, year)  
   
+
 init() 
+
+
 base_p_rdd = sc.textFile(persons_file)
 mapped_p_rdd = base_p_rdd.map(persons_parse_line) 
 
 print_rdd(mapped_p_rdd, "mapped_p_rdd")
 
-
+# Parse lines from singer_songs.csv
 def singer_songs_parse_line(line):
-    # add logic for parsing and cleaning the fields as specified in step 4 of assignment sheet
 
     fields = line.split(",")
     person_id = fields[0].strip()
@@ -90,12 +91,13 @@ def singer_songs_parse_line(line):
 
     return (person_id, song_id)  
 
+
 base_ss_rdd = sc.textFile(singer_songs_file)
 mapped_ss_rdd = base_ss_rdd.map(singer_songs_parse_line) 
 
 print_rdd(mapped_ss_rdd, "mapped_ss_rdd")
 
-
+# Crate set of all person_ids in singer_songs
 ss_collection = mapped_ss_rdd.collect()
 person_id_set = set()
 for tupl in ss_collection:
@@ -112,6 +114,7 @@ def save_rating_to_db(list_of_tuples):
 
     update_stmt = "INSERT INTO person_basics (person_id, primary_name, birth_year, gender) VALUES (%s, %s, %s, %s)"
 
+    # Ensures person_id from persons table is in singer_songs table
     if person_id in person_id_set:
         try:
             cur.execute(update_stmt, (person_id, primary_name, year, gender))
