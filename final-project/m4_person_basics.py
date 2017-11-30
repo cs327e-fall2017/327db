@@ -5,10 +5,10 @@ from pyspark import SparkConf, SparkContext
 log_path = "/home/hadoop/logs/" # don't change this
 aws_region = "us-east-1"  # don't change this
 s3_bucket = "cs327e-fall2017-final-project" # don't change this
-the_numbers_files = "s3a://" + s3_bucket + "/cinemalytics/*" # dataset for milestone 3
+#the_numbers_files = "s3a://" + s3_bucket + "/cinemalytics/*" # dataset for milestone 3
 
-persons_file = "s3a://" + s3_bucket + "/movielens/persons.csv"
-singer_songs_file = "s3a://" + s3_bucket + "/movielens/singer_songs.csv"
+persons_file = "s3a://" + s3_bucket + "/cinemalytics/persons.csv"
+singer_songs_file = "s3a://" + s3_bucket + "/cinemalytics/singer_songs.csv"
 
 # global variable sc = Spark Context
 sc = SparkContext()
@@ -54,8 +54,11 @@ def print_rdd(rdd, logfile):
 ################## process the-numbers dataset #################################
 
 def parse_year(full_date):
-    date = full_date.strip().split("/")
-    year = int(date[0])
+    date = full_date.strip().split("-")
+    if len(full_date) > 0:
+        year = int(date[0])
+    else:
+        year = None
 
     return (year)
 
@@ -87,16 +90,16 @@ def singer_songs_parse_line(line):
 
     return (person_id, song_id)  
 
-base_ss_rdd = sc.textFile(persons_file)
+base_ss_rdd = sc.textFile(singer_songs_file)
 mapped_ss_rdd = base_ss_rdd.map(singer_songs_parse_line) 
 
 print_rdd(mapped_ss_rdd, "mapped_ss_rdd")
 
 
-ss_collection = base_ss_rdd.collect()
-person_id_lst = []
+ss_collection = mapped_ss_rdd.collect()
+person_id_set = set()
 for tupl in ss_collection:
-    person_id_lst.append(tupl[0])
+    person_id_set.add(tupl[0])
 
 
 def save_rating_to_db(list_of_tuples):
@@ -106,23 +109,18 @@ def save_rating_to_db(list_of_tuples):
 
   for tupl in list_of_tuples:
     person_id, primary_name, gender, year = tupl
-    
-    #print "imdb_id_str = " + imdb_id_str
-    #print "avg_rating = " + str(avg_rating)
-    #update_stmt = "update title_ratings set movielens_rating = " + str(avg_rating) + " where title_id = '" + imdb_id_str + "'" 
-    #print "update_stmt = " + update_stmt + "\n"
 
-    update_stmt = "INSERT INTO Person_Basics (person_id, primary_name, birth_year, gender) VALUES (%s, %s, %s, %s)"
+    update_stmt = "INSERT INTO person_basics (person_id, primary_name, birth_year, gender) VALUES (%s, %s, %s, %s)"
 
-    if person_id in person_id_lst:
+    if person_id in person_id_set:
         try:
-            cur.execute(update_stmt, (person_id, primary_name, gender, year))
+            cur.execute(update_stmt, (person_id, primary_name, year, gender))
         except Exception as e:
             print ("Error in save_rating_to_db: ", e.message)
 
   
 # Saves all data to the RDS instance
-base_p_rdd.foreachPartition(save_rating_to_db)
+mapped_p_rdd.foreachPartition(save_rating_to_db)
 
 
 # free up resources
