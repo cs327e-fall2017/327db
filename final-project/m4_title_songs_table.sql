@@ -28,3 +28,7 @@ insert into title_songs select distinct tt.imdb_id, tts.song_id
 						join temp_titles tt on tts.c_movie_id = tt.c_movie_id
 						where tt.imdb_id is not null and tts.song_id is not null;
 #INSERT 0 5750
+
+drop table temp_titles;
+
+drop table temp_title_songs;

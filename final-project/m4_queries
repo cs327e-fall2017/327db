@@ -1,0 +1,2 @@
+SELECT * 
+FROM title_basics tb JOIN title_songs ts ON 

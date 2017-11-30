@@ -73,7 +73,7 @@ def persons_parse_line(line):
   
 init() 
 base_p_rdd = sc.textFile(persons_file)
-mapped_p_rdd = base_rdd.map(parse_line) 
+mapped_p_rdd = base_p_rdd.map(persons_parse_line) 
 
 print_rdd(mapped_p_rdd, "mapped_p_rdd")
 
@@ -88,7 +88,7 @@ def singer_songs_parse_line(line):
     return (person_id, song_id)  
 
 base_ss_rdd = sc.textFile(persons_file)
-mapped_ss_rdd = base_rdd.map(parse_line) 
+mapped_ss_rdd = base_ss_rdd.map(singer_songs_parse_line) 
 
 print_rdd(mapped_ss_rdd, "mapped_ss_rdd")
 
