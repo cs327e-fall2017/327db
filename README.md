@@ -20,11 +20,11 @@ Execution of intermediate-level queries (aggregate queries) and creation of corr
 Implementation of the star schema designed in Part 1. Aggregate query execution and Amazon Quicksight visualization of meaningful movie rating data from this schema. 
 
 ### Final Project
-The final project was divided into four milestones. Lab 1, Lab 2, and Lab 3 used exclusively a common IMDB dataset. The final project outlines an ETL process for ingesting data from two other common movie databases: Cinemalytics (a Bollywood equivalent of IMDB) and Movielens (an academia-based movie recommendation website). 
+The final project was divided into four milestones. Lab 1, Lab 2, and Lab 3 used exclusively a common IMDB dataset. The final project outlines an ETL process for ingesting data from two other common movie databases: Cinemalytics (a Bollywood equivalent of IMDB) and Movielens (an academia-based movie recommendation website). All .py files are PySpark scripts. 
 #### Milestone 1:
 Exploration of the Movielens dataset and ingestion into our previously-configured IMDB database. Configuring of an Amazon EMR (Elastic MapReduce) cluster for Spark job processing.
 #### Milestone 2:
-Further ingestion (ETL) of Movielens data (specifically, tag data) using PySpark.
+Further ingestion (ETL) of Movielens data (specifically, tag data).
 #### Milestone 3:
 Ingestion of online financial box office data into our database. Query optimization using indices.
 #### Milestone 4: 
